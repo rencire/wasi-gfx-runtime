@@ -48,17 +48,6 @@
             };
           };
       };
-      # # Expose as runnable app
-      # # Notes: We can grab my-app package from `pkgs` here, because flakelight automatically added it to
-      # # overlays.default.  Even for default package, it seems to grab the name from `pname`?
-      # apps = {
-      #   default =
-      #     { my-app, ... }:
-      #     {
-      #       type = "app";
-      #       program = "${my-app}/bin/my-app";
-      #     };
-      # };
       devShell = pkgs: {
         packages =
           let
