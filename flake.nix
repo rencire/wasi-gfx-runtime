@@ -26,30 +26,7 @@
         "x86_64-linux"
       ];
       withOverlays = [ fenix.overlays.default ];
-      # # Define the package
       packages = {
-        # default =
-        #   { pkgs, ... }:
-        #   let
-        #     rustToolchain = (
-        #       fenix.packages.${pkgs.system}.minimal.withComponents [
-        #         "cargo"
-        #         "rustc"
-        #       ]
-        #     );
-        #     craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
-        #     cargoArtifacts = craneLib.buildDepsOnly {
-        #       src = ./.;
-        #       pname = "my-app-deps";
-        #       version = "0.1.0";
-        #     };
-        #   in
-        #   craneLib.buildPackage {
-        #     inherit cargoArtifacts;
-        #     src = ./.;
-        #     pname = "my-app";
-        #     version = "0.1.0";
-        #   };
         witDepsCli =
           { pkgs, ... }:
           let
@@ -86,22 +63,22 @@
         packages =
           let
             rustToolchain = (
-              fenix.packages.${pkgs.system}.complete.withComponents [
-                "cargo"
-                "clippy"
-                "rust-src"
-                "rustc"
-                "rustfmt"
+              with fenix.packages.${pkgs.system};
+              combine [
+                complete."cargo"
+                complete."clippy"
+                complete."rust-src"
+                complete."rustc"
+                complete."rustfmt"
+                targets.wasm32-unknown-unknown.latest.rust-std
               ]
-              # … and add the wasm32 target
-              # .withTargets [ "wasm32-unknown-unknown" ];
             );
           in
           [
             rustToolchain
             pkgs.rust-analyzer-nightly
             pkgs.wasm-tools
-            pkgs.witDepsCli # from `packages` defined above
+            pkgs.witDepsCli
           ];
       };
     };
